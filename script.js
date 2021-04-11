@@ -105,7 +105,7 @@ function connect() {
                     (particlesArray[a].y - particlesArray[b].y));
             if (distance < (canvas.width / 7) * (canvas.height / 7)) {
                 opacityValue = 1 - (distance / 20000);
-                ctx.strokeStyle = 'rgba(140, 85, 31, ' + opacityValue + ')';
+                ctx.strokeStyle = 'rgba(255, 255, 255, ' + opacityValue + ')';
                 ctx.lineWidth = 1;
                 ctx.beginPath();
                 ctx.moveTo(particlesArray[a].x, particlesArray[a].y);
@@ -115,3 +115,36 @@ function connect() {
         }
     }
 }
+
+
+// animation loop
+function animate() {
+    requestAnimationFrame(animate);
+    ctx.clearRect(0, 0, innerWidth, innerHeight);
+
+    for (let i = 0; i < particlesArray.length; i++) {
+        particlesArray[i].update();
+    }
+    connect();
+}
+
+// resize event
+window.addEventListener('resize',
+    function() {
+        canvas.width = innerWidth;
+        canvas.height = innerHeight;
+        mouse.radius = ((canvas.height / 80) * (canvas.height / 80));
+        init();
+    }
+);
+
+// mouse out event 
+window.addEventListener('mouseout',
+    function() {
+        mouse.x = undefined;
+        mouse.y = undefined;
+    }
+)
+
+init();
+animate();

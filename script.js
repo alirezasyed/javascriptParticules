@@ -75,3 +75,43 @@ class Particle {
         this.draw();
     }
 }
+
+
+// create particle array
+function init() {
+    particlesArray = [];
+    let numberOfParticles = (canvas.height * canvas.width) / 5000;
+    for (let i = 0; i < numberOfParticles * 2; i++) {
+        let size = (Math.random() * 5) + 1;
+        let x = (Math.random() * ((innerWidth - size * 2) - (size * 2)) + size * 2);
+        let y = (Math.random() * ((innerHeight - size * 2) - (size * 2)) + size * 2);
+        let directionX = (Math.random() * 5) - 2.5;
+        let directionY = (Math.random() * 5) - 2.5;
+        let color = '#8C5523';
+
+        particlesArray.push(new Particle(x, y, directionX, directionY, size, color));
+    }
+}
+
+
+// check if particles are close enough to draw line between them
+function connect() {
+    let opacityValue = 1;
+    for (let a = 0; a < particlesArray.length; a++) {
+        for (let b = a; b < particlesArray.length; b++) {
+            let distance = ((particlesArray[a].x - particlesArray[b].x) *
+                    (particlesArray[a].x - particlesArray[b].x)) +
+                ((particlesArray[a].y - particlesArray[b].y) *
+                    (particlesArray[a].y - particlesArray[b].y));
+            if (distance < (canvas.width / 7) * (canvas.height / 7)) {
+                opacityValue = 1 - (distance / 20000);
+                ctx.strokeStyle = 'rgba(140, 85, 31, ' + opacityValue + ')';
+                ctx.lineWidth = 1;
+                ctx.beginPath();
+                ctx.moveTo(particlesArray[a].x, particlesArray[a].y);
+                ctx.lineTo(particlesArray[b].x, particlesArray[b].y);
+                ctx.stroke();
+            }
+        }
+    }
+}
